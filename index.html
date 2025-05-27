@@ -1,1 +1,256 @@
-<!-- placeholder for index.html, will be filled soon -->
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>گزارش روزانه گلخانه</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.png" />
+  <meta name="theme-color" content="#4CAF50" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/persian-date/dist/persian-date.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" />
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      padding: 16px;
+      background-color: #f0f4f8;
+      color: #333;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      font-size: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 14px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 14px;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .report-box {
+      background: #fff;
+      padding: 10px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    button:hover { opacity: 0.95; }
+    .btn-green { background: #4CAF50; color: #fff; }
+    .btn-red { background: #f44336; color: #fff; }
+    .btn-blue { background: #2196F3; color: #fff; }
+    @media (max-width: 600px) {
+      h1 { font-size: 18px; }
+      label { font-size: 14px; }
+      input, select, textarea { font-size: 13px; }
+      button { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>📋 گزارش روزانه گلخانه</h1>
+  <label>تاریخ</label>
+  <input type="text" id="report-date" readonly style="background:#fff; cursor:pointer;" />
+  <label>نام سالن</label>
+  <select id="greenhouse-name">
+    <option value="">انتخاب سالن</option>
+<option value="فاز 1 سالن 1">فاز 1 سالن 1</option><option value="فاز 1 سالن 2">فاز 1 سالن 2</option><option value="فاز 1 سالن 3">فاز 1 سالن 3</option><option value="فاز 1 سالن 4">فاز 1 سالن 4</option><option value="فاز 1 سالن 5">فاز 1 سالن 5</option><option value="فاز 1 سالن 6">فاز 1 سالن 6</option><option value="فاز 2 سالن 1">فاز 2 سالن 1</option><option value="فاز 2 سالن 2">فاز 2 سالن 2</option><option value="فاز 2 سالن 3">فاز 2 سالن 3</option><option value="فاز 2 سالن 4">فاز 2 سالن 4</option><option value="فاز 2 سالن 5">فاز 2 سالن 5</option><option value="فاز 2 سالن 6">فاز 2 سالن 6</option><option value="فاز 3 سالن 1">فاز 3 سالن 1</option><option value="فاز 3 سالن 2">فاز 3 سالن 2</option><option value="فاز 3 سالن 3">فاز 3 سالن 3</option><option value="فاز 3 سالن 4">فاز 3 سالن 4</option><option value="فاز 3 سالن 5">فاز 3 سالن 5</option><option value="فاز 3 سالن 6">فاز 3 سالن 6</option><option value="فاز 3 سالن 7">فاز 3 سالن 7</option><option value="فاز 3 سالن 8">فاز 3 سالن 8</option>
+  </select>
+  <label>نوع فعالیت</label>
+  <select id="task-type">
+    <option value="">انتخاب فعالیت</option>
+    <option value="irrigation">آبیاری</option>
+    <option value="spraying">محلول‌پاشی</option>
+    <option value="pesticide">سم‌پاشی</option>
+    <option value="harvest">برداشت</option>
+    <option value="repair">تعمیرات</option>
+    <option value="maintenance">نگهداری</option>
+    <option value="other">سایر</option>
+  </select>
+  <label>توضیح فعالیت</label>
+  <textarea id="task-desc" rows="2"></textarea>
+  <label>زمان</label>
+  <input type="text" id="task-time" />
+  <label>نام مسئول</label>
+  <input type="text" id="task-person" />
+  <label>شرایط بوته</label>
+  <textarea id="plant-status" rows="2"></textarea>
+
+  <button class="btn-green" onclick="saveReport()">💾 ذخیره</button>
+  <button class="btn-blue" onclick="renderReports()">📋 مشاهده گزارش‌ها</button>
+  <button class="btn-red" onclick="clearReports()">🗑 پاک‌سازی</button>
+  <input type="file" id="fileLoader" accept="application/json" />
+  <button class="btn-gray" onclick="loadFromFile()">📂 بارگذاری فایل</button>
+  <button class="btn-yellow" onclick="downloadReports()">📥 خروجی JSON</button>
+  <button class="btn-blue" onclick="shareData()">📤 ارسال</button>
+
+  <div id="report-list"></div>
+
+  <script>
+    $('#report-date').persianDatepicker({
+      initialValueType: 'persian',
+      format: 'YYYY/MM/DD',
+      autoClose: true
+    });
+
+    function getKey(hall, type) {
+      return "greenhouseReports_" + hall + "_" + type;
+    }
+
+    function saveReport() {
+      const hall = document.getElementById("greenhouse-name").value;
+      const typeSel = document.getElementById("task-type");
+      const type = typeSel.value;
+      const typeText = typeSel.options[typeSel.selectedIndex].text;
+      const report = {
+        date: document.getElementById("report-date").value,
+        hall,
+        type: typeText,
+        desc: document.getElementById("task-desc").value,
+        time: document.getElementById("task-time").value,
+        person: document.getElementById("task-person").value,
+        plant: document.getElementById("plant-status").value
+      };
+      if (!report.date || !hall || !type || !report.desc || !report.person) {
+        alert("لطفاً همه فیلدها را پر کنید.");
+        return;
+      }
+      const key = getKey(hall, type);
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+      data.push(report);
+      localStorage.setItem(key, JSON.stringify(data));
+      renderReports();
+      alert("✅ ثبت شد");
+    }
+
+    function renderReports() {
+      const hall = document.getElementById("greenhouse-name").value;
+      const container = document.getElementById("report-list");
+      if (!hall) {
+        container.innerHTML = "<p>نام سالن را انتخاب کنید</p>";
+        return;
+      }
+      const keys = ["irrigation", "spraying", "pesticide", "harvest", "repair", "maintenance", "other"];
+      let all = [];
+      keys.forEach(k => {
+        const key = getKey(hall, k);
+        const d = JSON.parse(localStorage.getItem(key) || "[]");
+        all = all.concat(d);
+      });
+      if (!all.length) {
+        container.innerHTML = "<p>هیچ گزارشی یافت نشد.</p>";
+        return;
+      }
+      container.innerHTML = all.map(r => `
+        <div class="report-box">
+          <strong>تاریخ:</strong> ${r.date}<br>
+          <strong>سالن:</strong> ${r.hall}<br>
+          <strong>فعالیت:</strong> ${r.type}<br>
+          <strong>توضیح:</strong> ${r.desc}<br>
+          <strong>زمان:</strong> ${r.time}<br>
+          <strong>مسئول:</strong> ${r.person}<br>
+          <strong>شرایط بوته:</strong> ${r.plant}
+        </div>`).join('');
+    }
+
+    function clearReports() {
+      const hall = document.getElementById("greenhouse-name").value;
+      const types = ["irrigation", "spraying", "pesticide", "harvest", "repair", "maintenance", "other"];
+      types.forEach(t => localStorage.removeItem(getKey(hall, t)));
+      renderReports();
+    }
+
+    function downloadReports() {
+      const hall = document.getElementById("greenhouse-name").value;
+      const types = ["irrigation", "spraying", "pesticide", "harvest", "repair", "maintenance", "other"];
+      let all = [];
+      types.forEach(t => {
+        const d = JSON.parse(localStorage.getItem(getKey(hall, t)) || "[]");
+        all = all.concat(d);
+      });
+      const blob = new Blob([JSON.stringify(all)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = hall + "_reports.json";
+      a.click();
+    }
+
+    function loadFromFile() {
+      const input = document.getElementById("fileLoader");
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!Array.isArray(imported)) throw "فرمت اشتباه است";
+          const hall = document.getElementById("greenhouse-name").value;
+          const type = document.getElementById("task-type").value;
+          localStorage.setItem(getKey(hall, type), JSON.stringify(imported));
+          renderReports();
+          alert("✅ بارگذاری موفق");
+        } catch (err) {
+          alert("❌ خطا: " + err);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function shareData() {
+      const hall = document.getElementById("greenhouse-name").value;
+      const types = ["irrigation", "spraying", "pesticide", "harvest", "repair", "maintenance", "other"];
+      let all = [];
+      types.forEach(t => {
+        const d = JSON.parse(localStorage.getItem(getKey(hall, t)) || "[]");
+        all = all.concat(d);
+      });
+      if (!all.length) return alert("هیچ داده‌ای وجود ندارد.");
+      const last = all[all.length - 1];
+      const msg = `📋 گزارش
+تاریخ: ${last.date}
+سالن: ${last.hall}
+فعالیت: ${last.type}
+توضیح: ${last.desc}
+زمان: ${last.time}
+مسئول: ${last.person}
+شرایط بوته: ${last.plant}`;
+      if (navigator.share) {
+        navigator.share({ text: msg });
+      } else {
+        prompt("متن برای کپی:", msg);
+      }
+    }
+
+    // ثبت سرویس‌ورکر
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log("SW ثبت شد", reg))
+        .catch(err => console.log("SW ثبت نشد", err));
+    }
+  </script>
+</body>
+</html>
