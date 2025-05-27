@@ -1,0 +1,15 @@
+{
+  "name": "گزارش گلخانه قهرمان",
+  "short_name": "گلخانه",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#4CAF50",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
